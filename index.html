@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0810ZNG3PL"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-0810ZNG3PL');
+</script>
+  <meta name="keywords" content="editor DTF, quitar fondo, mejorar imágenes, semitono, impresión textil, IA para diseño, PigmentaLab">
+  <meta name="description" content="Editor IA DTF para mejorar imágenes, quitar fondo, aplicar efectos semitono, calado artístico y más. Ideal para impresión textil.">
+  <meta property="og:title" content="Editor IA DTF - PigmentaLab" />
+  <meta property="og:description" content="Mejorá tus imágenes, eliminá fondos y generá semitonos de alta calidad con inteligencia artificial para impresión textil." />
+  <meta property="og:image" content="https://pigmentalab.io/img/editor-cover.jpg" />
+  <meta property="og:url" content="http://pigmentalab.io:8080/" />
+  <meta property="og:type" content="website" />
+
+  <meta charset="UTF-8">
+  <meta name="google-site-verification" content="7NEdZuY2KRw1_5T5IMzy6IPy9yqdwf9K4wovua8TRIE" />
+  <title>Editor Mejorador de Imagenes con Ingeligencia artificial</title>
+
+  <!-- Firebase SDK para apps sin bundler (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script>
+    // Configuración de tu proyecto
+    const firebaseConfig = {
+      apiKey: "AIzaSyDiN6yJajiZv08LRpA_bC1nfTTmsJRivvU",
+      authDomain: "pigmentalab-6ce72.firebaseapp.com",
+      projectId: "pigmentalab-6ce72",
+      storageBucket: "pigmentalab-6ce72.appspot.com",
+      messagingSenderId: "206056684664",
+      appId: "1:206056684664:web:d12b82e43329fd92b7c18d",
+      measurementId: "G-0810ZNG3PL"
+    };
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script>
+    function validarAlto() {
+      const input = document.getElementById("alto_cm");
+      const error = document.getElementById("errorAlto");
+      if (parseFloat(input.value) > 30) {
+        error.style.display = "block";
+        input.setCustomValidity("No podés superar los 30 cm sin suscripción.");
+      } else {
+        error.style.display = "none";
+        input.setCustomValidity("");
+      }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Editor IA DTF - PigmentaLab",
+      "operatingSystem": "Web",
+      "applicationCategory": "ImageEditor",
+      "description": "Editor IA DTF para eliminar fondo, mejorar calidad y aplicar semitono en imágenes para impresión textil.",
+      "browserRequirements": "Requires JavaScript",
+      "author": {
+        "@type": "Organization",
+        "name": "PigmentaLab"
+      },
+      "url": "http://pigmentalab.io:8080/",
+      "image": "https://pigmentalab.io/img/editor-cover.jpg"
+    }
+    </script>
+    
+
+  <style>
+    .user-profile {
+  width: 131px;
+  height: 51px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  background: linear-gradient(
+    to bottom right,
+    #2e8eff 0%,
+    rgba(46, 142, 255, 0) 30%
+  );
+  background-color: rgba(46, 142, 255, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 0;
+}
+
+.user-profile:hover,
+.user-profile:focus {
+  background-color: rgba(46, 142, 255, 0.7);
+  box-shadow: 0 0 10px rgba(46, 142, 255, 0.5);
+  outline: none;
+}
+
+.user-profile-inner {
+  width: 127px;
+  height: 47px;
+  border-radius: 13px;
+  background-color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-weight: 600;
+  font-family: sans-serif;
+}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      height: 100vh;
+    }
+    /* Overlay para móviles */
+    #mobileWarning {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: #000;
+      color: #00ffff;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+    /* Contenedor de la app */
+    #appContent {
+      display: flex;
+      flex: 1;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #1e1e1e;
+      padding-top: 20px;
+      border-right: 2px solid #00ffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .sidebar a {
+      text-decoration: none;
+      color: #00ffff;
+      font-weight: bold;
+      margin: 10px 0;
+      display: block;
+      width: 90%;
+      text-align: center;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .sidebar a:hover {
+      background-color: #00ffff;
+      color: #000;
+    }
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .tab-content {
+      display: none;
+      background-color: #1e1e1e;
+      padding: 30px;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,255,255,0.2);
+    }
+    .tab-content.active {
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background-color: #00ffff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #descargaAmplia,
+    #descargaFondo,
+    #descargaHalftone,
+    #descargaMejorada,
+    #descargaCalado {
+      display: none;
+      margin-top: 20px;
+    }
+    #loaderOverlay {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .loader {
+      border: 8px solid #1e1e1e;
+      border-top: 8px solid #00ffff;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loaderText {
+      margin-top: 15px;
+      font-size: 16px;
+      color: #00ffff;
+    }
+    #topBar button:hover {
+  background-color: #00ffff;
+  color: #000;
+}
+.form-container {
+  background: linear-gradient(#212121, #212121) padding-box,
+              linear-gradient(120deg, transparent 25%, #1cb0ff, #40ff99) border-box;
+  border: 2px solid transparent;
+  padding: 32px 24px;
+  font-size: 14px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+  border-radius: 16px;
+}
+
+.heading {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+button {
+  border-radius: 5px;
+  padding: 6px 12px;
+  background: #ffffff14;
+  color: #c7c5c5;
+  border: 1px solid #414141;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #212121;
+  cursor: pointer;
+}
+.input {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 1em 0 1em 0;
+  max-width: 190px;
+  position: relative;
+}
+
+.input input {
+  font-size: 100%;
+  padding: 0.8em;
+  outline: none;
+  border: 2px solid rgb(141, 109, 255);
+  background-color: transparent;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.input label {
+  font-size: 100%;
+  position: absolute;
+  left: 0;
+  padding: 0.8em;
+  margin-left: 0.5em;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  color: rgb(255, 255, 255);
+}
+
+.input :is(input:focus, input:valid)~label {
+  transform: translateY(-50%) scale(.9);
+  margin: 0em;
+  margin-left: 1.3em;
+  padding: 0.4em;
+  background-color: #212121;
+}
+
+.inputGroup :is(input:focus, input:valid) {
+  border-color: rgb(37, 37, 211);
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    width: 100%;
+    padding: 20px;
+    justify-items: center;
+    margin: 0 auto;
+}
+
+.card {
+    background: linear-gradient(#212121, #212121) padding-box,
+                linear-gradient(120deg, transparent 25%, #1cb0ff, #40ff99) border-box;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    font-size: 1em;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    object-fit: cover;
+    height: auto;
+}
+
+.card h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.card p {
+    margin-bottom: 10px;
+}
+
+.button {
+  cursor: pointer;
+  font-size: 1.2rem;
+  border-radius: 16px;
+  border: none;
+  padding: 2px;
+  background: radial-gradient(circle 80px at 80% -10%, #ffffff, #181b1b);
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+.button::after {
+  content: "";
+  position: absolute;
+  width: 65%;
+  height: 60%;
+  border-radius: 120px;
+  top: 0;
+  right: 0;
+  box-shadow: 0 0 20px #ffffff38;
+  z-index: -1;
+}
+.blob1 {
+  position: absolute;
+  width: 70px;
+  height: 100%;
+  border-radius: 16px;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(circle 60px at 0% 100%, #3fe9ff, #0000ff80, transparent);
+  box-shadow: -10px 10px 30px #0051ff2d;
+  z-index: -2;
+}
+.inner {
+  padding: 14px 25px;
+  border-radius: 14px;
+  color: #fff;
+  z-index: 3;
+  position: relative;
+  background: radial-gradient(circle 80px at 80% -50%, #777777, #0f1111);
+  transition: transform 0.2s ease;
+}
+.inner::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  border-radius: 14px;
+  background: radial-gradient(circle 60px at 0% 100%, #00e1ff1a, #0000ff11, transparent);
+  position: absolute;
+}
+.button:hover .inner {
+  transform: scale(1.05);
+}
+/* Botón circular con tooltip y animaciones */
+.Btn {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgb(27, 27, 27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color .3s, box-shadow .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.11);
+}
+
+.svgIcon {
+  fill: rgb(214, 178, 255);
+  transition: fill .3s;
+}
+
+.icon2 {
+  width: 18px;
+  height: 5px;
+  border-bottom: 2px solid rgb(182, 143, 255);
+  border-left:   2px solid rgb(182, 143, 255);
+  border-right:  2px solid rgb(182, 143, 255);
+  transition: border-color .3s;
+}
+
+.tooltip {
+  position: absolute;
+  right: calc(100% + 10px);
+  white-space: nowrap;
+  opacity: 0;
+  background-color: rgb(12, 12, 12);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity .2s;
+  font-size: 0.85rem;
+}
+
+.tooltip::before {
+  content: "";
+  position: absolute;
+  width: 10px; height: 10px;
+  background-color: rgb(12, 12, 12);
+  transform: rotate(45deg);
+  left: -5px;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.Btn:hover .tooltip {
+  opacity: 1;
+}
+
+.Btn:hover {
+  background-color: rgb(150, 94, 255);
+}
+
+.Btn:hover .icon2 {
+  border-color: rgb(235, 235, 235);
+}
+
+.Btn:hover .svgIcon {
+  fill: #fff;
+  animation: slide-in-top 0.6s cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>
+
+</head>
+
+
+
+  <!-- Mensaje para móviles -->
+  <!-- <div id="mobileWarning">
+    <div style="font-size:60px;">💻</div>
+    <h1>Solo disponible en computadoras</h1>
+    <p>Accedé desde una PC o Notebook para ingresar a la experiencia de PigmentaLAB.io</p>
+   </div>
+
+     <!-- HEADER -->
+  <div id="topBar" style="position:fixed;top:0;left:0;width:100%;height:25px;background:#000;border-bottom:1px solid #00ffff;color:#00ffff;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;z-index:10000;font-family:sans-serif;">
+  <div id="userMenu" style="position:relative;">
+    <span id="userEmail" style="cursor:pointer;font-weight:bold;"></span>
+    <span id="userMenuToggle" style="cursor:pointer;font-weight:bold;"></span>
+<div id="dropdown" style="
+  display: none;
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: #1e1e1e;
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 240px;
+  box-shadow: 0 0 12px rgba(0,255,255,0.2);
+  z-index: 10001;
+">
+
+  <div style="padding: 10px 16px; border-bottom: 1px solid #00ffff; color: #00ffff; font-weight: bold;" id="userEmailDisplay">
+    PigmentaLab.io
+  </div>
+
+  <a href="contacto.html" style="
+    display: block;
+    text-align: center;
+    padding: 12px;
+    background: linear-gradient(120deg, #00ffff, #8a2be2);
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    border-bottom: 1px solid #00ffff;
+  ">➕ Agregar Créditos</a>
+
+  
+
+  <button onclick="logout()" style="
+    width: 100%;
+    padding: 12px;
+    background: none;
+    border: none;
+    color: #00ffff;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+  ">🔓 Cerrar sesión</button>
+
+
+</div>
+
+
+    
+  </div>
+  </div>
+
+
+  <!-- Contenedor principal de la app -->
+  <div id="appContent" style="padding-top: 20px;">
+
+   
+
+    <!-- Google Login obligatorio -->
+    <script>
+      firebase.auth().onAuthStateChanged(user => {
+  if (!user) {
+    // Crea un header de login y lo agrega al body
+    const loginBar = document.createElement('div');
+    loginBar.id = 'loginHeader';
+    loginBar.innerHTML = `
+<div style="
+  width: 100%;
+  background: linear-gradient(120deg, #00ffff, #8a2be2);
+  color: white;
+  padding: 3px 2px 15px 2px;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 2px 16px rgba(0, 255, 255, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 2px solid #00ffff;
+">
+  <!-- Logo -->
+  <img src="este.png" alt="PigmentaLab Logo" style="
+    height: 90px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
+  ">
+
+  <p style="margin-bottom: 15px; font-size: 1rem; color: #f0f0f0; text-shadow: 0 0 40px rgba(0,0,0,0.4);">
+    Ingresa a PigmentaLab, Inicia sesión — <strong>Registrate al (BETA 1.0)</strong>
+  </p>
+
+  <!-- Botón con estilo compacto -->
+  <button onclick="loginConGoogle()" style="
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 12px;
+    border: none;
+    background: #000;
+    color: #00ffff;
+    cursor: pointer;
+    box-shadow:
+      0 0 10px #00ffffaa,
+      inset 0 0 10px #00ffff55;
+    transition: transform 0.2s ease;
+  " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    🔐 Iniciar sesión con Google
+  </button>
+</div>
+
+
+
+ <div style="
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200px 75px;
+  max-width: 1200px;
+  margin: auto;
+">
+
+  
+<!-- Estilos de los cards -->
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    justify-content: center;
+    padding: 0 20px;
+  }
+
+  .card {
+    background: linear-gradient(#212121, #212121) padding-box,
+                linear-gradient(120deg, transparent 25%, #1cb0ff, #40ff99) border-box;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    box-sizing: border-box;
+    max-width: 100%;
+    transition: transform 0.2s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.03);
+  }
+
+  .card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+
+  .card p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .card img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+    object-fit: cover;
+  }
+</style>
+
+<!-- Contenido -->
+<div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center;">
+  <h1 style="margin-bottom: 10px;">Editor DTF con Herramientas Profesionales</h1>
+  <p style="max-width: 700px; margin: 0 auto 40px;">
+    Descubrí nuestras herramientas diseñadas para mejorar tus diseños y prepararlos para impresión textil de alta calidad.
+  </p>
+
+  <div class="card-grid">
+
+    <!-- CARD CON EFECTO -->
+    <div onclick="loginConGoogle()"
+         class="card group relative"
+         style="background-image: url('lab.png'); background-size: cover; background-position: center; position: relative; overflow: hidden; width: 320px; height: 350px; padding: 20px; border-radius: 8px; display: flex; flex-direction: column; color: white;">
+
+      <!-- Efecto de borde animado -->
+      <div class="absolute inset-0 border-2 border-transparent rounded-md group-hover:border-cyan-400 transition-all duration-500 z-[1] pointer-events-none"></div>
+
+      <!-- Capa oscura encima de la imagen para contraste -->
+      <div style="position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 0; border-radius: 8px;"></div>
+
+      <!-- Contenido de la card -->
+      <div class="main-content relative z-10 flex flex-col justify-center items-center text-center space-y-4 h-full">
+        <h2 class="text-2xl font-extrabold text-cyan-300 leading-tight">
+          INGRESÁ<br>ACÁ
+        </h2>
+
+        <p class="text-sm text-gray-200">Empezá a crear tus imágenes personalizadas en segundos.</p>
+
+        <div class="mt-4 w-full bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:opacity-90 transition">
+          Continuar con Google
+        </div>
+      </div>
+    </div>
+
+    <!-- OTRAS CARDS NORMALES -->
+    <a href="mejorar.html" class="card hover:scale-105 transition-transform duration-200">
+      <h2>📏 Mejora la calidad de tus Imágenes</h2>
+      <p>Aumentá resolución a 300 DPI y convertí tus archivos en centímetros reales para impresión.</p>
+      <img src="https://descubrecomohacerlo.com/wp-content/uploads/mch/editar-imagen-mejorar-calidad_9137.jpg" alt="Mejorar calidad">
+    </a>
+
+    <div class="card">
+      <h2>🖨️ Optimización 300 DPI</h2>
+      <p>Lográ resultados listos para producción con resolución profesional.</p>
+      <img src="https://canonbcn22.b-cdn.net/wp-content/uploads/71-71-imageprograf-ipf-pro-4000-canon-plotter.v1-1200x597.jpg" alt="300 DPI">
+    </div>
+
+    <a href="quitarfondo.html" class="card hover:scale-105 transition-transform duration-200">
+      <h2>🧽 Eliminar Fondo Automáticamente</h2>
+      <p>Quitar fondo sin esfuerzo en tus diseños PNG con IA avanzada.</p>
+      <img src="https://i0.wp.com/imgs.hipertextual.com/wp-content/uploads/2020/03/hipertextual-elimina-fondo-cualquier-video-gif-con-simple-clic-2020751024.jpg" alt="Quitar fondo">
+    </a>
+
+    <div class="card">
+      <h2>🎨 Efecto Semitono</h2>
+      <p>Convertí tus imágenes en tramas listas para imprimir en DTF de alta definición.</p>
+      <img src="https://i.ytimg.com/vi/HSbHEWOLgSc/maxresdefault.jpg" alt="Semitono">
+    </div>
+
+    <div class="card">
+      <h2>🌑 Fondo Negro Inteligente</h2>
+      <p>Eliminá fondo oscuro para estampar sobre prendas negras sin errores.</p>
+      <img src="https://i.blogs.es/e0d3cd/fondo-negro-portada/original.jpg" alt="Fondo negro">
+    </div>
+
+  </div>
+
+  <!-- BOTONES ABAJO -->
+  <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 16px; align-items: center;">
+
+    <!-- Botón Semitonos -->
+    <a href="http://pigmentalab.io:8080/semitonos_adv.html" style="
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 1rem;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(120deg, #00ffff, #8a2be2);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      box-shadow:
+          0 0 8px rgba(0, 255, 255, 0.5),
+          0 0 16px rgba(138, 43, 226, 0.5),
+          inset 0 0 8px rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;"
+      onmouseover="this.style.transform='scale(1.05)';"
+      onmouseout="this.style.transform='scale(1)';">
+      🎨 Probar Semitonos Avanzados
+    </a>
+
+    <!-- Botón Contacto -->
+    <a href="http://pigmentalab.io:8080/contacto.html" style="
+      display: inline-block;
+      padding: 12px 24px;
+      font-size: 1rem;
+      color: white;
+      text-decoration: none;
+      background: linear-gradient(120deg, #ff00a8, #00ffff);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      box-shadow:
+          0 0 8px rgba(255, 0, 168, 0.5),
+          0 0 16px rgba(0, 255, 255, 0.5),
+          inset 0 0 8px rgba(255, 255, 255, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;"
+      onmouseover="this.style.transform='scale(1.05)';"
+      onmouseout="this.style.transform='scale(1)';">
+      📩 Contactanos
+    </a>
+  </div>
+</div>
+
+
+
+
+    `;
+    document.body.prepend(loginBar);
+
+    // Bloquear el resto de la app (si querés ocultar el contenido mientras tanto)
+    document.getElementById("appContent").style.display = "none";
+  }
+});
+
+      function loginConGoogle() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+          .then(() => location.reload())
+          .catch(e => alert("Error al iniciar sesión: " + e.message));
+      }
+      firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    // Mostrar email en la barra superior
+    
+    const userEmail = document.getElementById("userEmail");
+    userEmail.innerText = `👤 ${user.email}`;
+    userEmail.onclick = () => {
+      const dropdown = document.getElementById("dropdown");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    };
+  }
+});
+
+function logout() {
+  firebase.auth().signOut().then(() => {
+    location.reload();
+  });
+}
+
+    </script>
+
+    <!-- Menú lateral -->
+<div class="sidebar space-y-4 text-white">
+
+  <!-- Logo PigmentaLab -->
+  <div class="flex justify-center items-center pt-4 pb-4 bg-[#1e1e1e] shadow-md rounded-md mx-2">
+    <a href="#" title="Inicio PigmentaLab">
+      <img src="este.png"
+     alt="PigmentaLab Logo"
+     style="height: 40px;"
+     class="object-contain mx-auto transition-transform duration-300 hover:scale-105 hover:drop-shadow-[0_0_10px_#00FFFF]">
+
+
+
+    </a>
+  </div>
+
+  <!-- Opciones del menú -->
+  <a href="#" onclick="mostrarTab('ampliar')" class="flex items-center gap-2">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" class="feather feather-zoom-in">
+      <circle cx="11" cy="11" r="8" />
+      <line x1="11" y1="8" x2="11" y2="14" />
+      <line x1="8" y1="11" x2="14" y2="11" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+    </svg>
+    Ampliar Imagen
+  </a>
+
+  <a href="#" onclick="mostrarTab('quitar')" class="flex items-center gap-2">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" class="feather feather-scissors">
+      <circle cx="6" cy="6" r="3" />
+      <circle cx="6" cy="18" r="3" />
+      <line x1="20" y1="4" x2="8.12" y2="15.88" />
+      <line x1="14.47" y1="14.48" x2="20" y2="20" />
+    </svg>
+    Quitar Fondo
+  </a>
+
+  <a href="#" onclick="mostrarTab('quitarAdv')" class="flex items-center gap-2">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" class="feather feather-layers">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+    Quitar Fondo Avanzado
+  </a>
+
+  <a href="#" onclick="mostrarTab('halftone')" class="flex items-center gap-2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="4" cy="4" r="2" />
+      <circle cx="12" cy="4" r="2" />
+      <circle cx="20" cy="4" r="2" />
+      <circle cx="4" cy="12" r="2" />
+      <circle cx="12" cy="12" r="2" />
+      <circle cx="20" cy="12" r="2" />
+      <circle cx="4" cy="20" r="2" />
+      <circle cx="12" cy="20" r="2" />
+      <circle cx="20" cy="20" r="2" />
+    </svg>
+    Semitono
+  </a>
+
+  <a href="#" onclick="mostrarTab('stochastic')" class="flex items-center gap-2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="5" cy="5" r="1.5"/>
+      <circle cx="10" cy="12" r="2"/>
+      <circle cx="15" cy="6" r="1"/>
+      <circle cx="19" cy="14" r="1.8"/>
+      <circle cx="7" cy="17" r="2.3"/>
+    </svg>
+    Semitono Avanzado
+  </a>
+
+  <a href="#" onclick="mostrarTab('mejorar')" class="flex items-center gap-2">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" class="feather feather-sun">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+    Mejorar Colores
+  </a>
+
+  <a href="#" onclick="mostrarTab('calado')" class="flex items-center gap-2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="feather feather-droplet">
+      <path d="M12 2C12 2 4 10 4 16a8 8 0 0016 0c0-6-8-14-8-14z" />
+    </svg>
+    Calado Artístico
+  </a>
+
+  <a href="contacto.html" target="_blank" class="flex items-center gap-2">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" class="feather feather-mail">
+      <path d="M4 4h16v16H4z" />
+      <polyline points="22,6 12,13 2,6" />
+    </svg>
+    CONTACTO
+  </a>
+
+</div>
+
+
+    <!-- Área principal -->
+    <div class="main-content">
+      <div id="usosRestantes" style="margin-bottom:20px;background:#1e1e1e;padding:15px;border-radius:10px;color:#00ffff;font-weight:bold;box-shadow:0 0 10px rgba(0,255,255,0.2);">
+        🔄 Consultando tus usos restantes...
+      </div>
+
+      <!-- PESTAÑAS -->
+      <<div id="ampliar" class="tab-content active">
+        <h2>🔍 Ampliar Imagen</h2>
+        <form id="formAmpliar">
+      
+          <!-- Botón personalizado para seleccionar archivo -->
+          <div class="input" style="position: relative;">
+            <input type="file" name="imagen" id="fileInputAmpliar" accept=".png,.jpg,.jpeg" required style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;">
+            <button type="button" onclick="document.getElementById('fileInputAmpliar').click()" class="user-profile" type="button">
+              <div class="user-profile-inner">📁 Seleccionar Imagen</div>
+            </button>
+          </div>
+      
+          <!-- Campo alto en cm -->
+          <div class="input" style="position: relative;">
+            <input type="number" id="alto_cm" name="alto_cm" step="0.1" required max="30" oninput="validarAlto()">
+            <label>Alto en cm</label>
+            <small id="errorAlto" style="color: #ff8080; display: none; position: absolute; top: 100%; left: 0; font-size: 0.8em;">
+              ⚠️ El máximo permitido es 30 cm para cuentas gratuitas.
+            </small>
+          </div>
+      
+          <!-- Campo DPI -->
+          <div class="input">
+            <input type="number" name="dpi" value="300" readonly>
+            <label>DPI</label>
+          </div>
+      
+          <!-- Botón procesar -->
+          <button type="submit" class="user-profile">
+            <div class="user-profile-inner">Procesar Imagen</div>
+          </button>
+        </form>
+      
+        <div id="descargaAmplia">
+          <p>✅ Imagen procesada</p>
+          <a id="linkAmplia" href="#" download>⬇️ Descargar Imagen</a>
+        </div>
+      </div>
+      
+      
+      <div id="quitar" class="tab-content">
+        <h2>💠 Quitar Fondo</h2>
+        <form id="formFondo">
+      
+          <!-- Botón personalizado para seleccionar archivo -->
+          <div class="input" style="position: relative;">
+            <input type="file" name="imagen" id="fileInputQuitar" accept=".png,.jpg,.jpeg" required style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;">
+            <button type="button" onclick="document.getElementById('fileInputQuitar').click()" class="user-profile">
+              <div class="user-profile-inner">📁 Seleccionar Imagen</div>
+            </button>
+          </div>
+      
+          <!-- Botón para procesar -->
+          <button type="submit" class="user-profile">
+            <div class="user-profile-inner">Quitar Fondo</div>
+          </button>
+        </form>
+      
+        <div id="descargaFondo">
+          <p>✅ Imagen procesada</p>
+          <a id="linkFondo" href="#" download>⬇️ Descargar Sin Fondo</a>
+        </div>
+      </div>
+      
+      <div id="quitarAdv" class="tab-content">
+        <h2>🛠️ Quitar Fondo Avanzado</h2>
+        <form id="formFondoAdv">
+      
+          <!-- Botón personalizado para seleccionar archivo -->
+          <div class="input" style="position: relative;">
+            <input type="file" name="imagen" id="fileInputAdv" required accept=".png,.jpg,.jpeg" style="opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer;">
+            <button type="button" onclick="document.getElementById('fileInputAdv').click()" class="user-profile">
+              <div class="user-profile-inner">📁 Seleccionar Imagen</div>
+            </button>
+          </div>
+      
+          <!-- FG Threshold -->
+          <label>FG Threshold: <span id="fgVal">240</span></label>
+          <input type="range" name="fg_thresh" id="fg_thresh" min="200" max="255" value="240">
+          <small class="help-text">
+            Controla cuánta parte del sujeto consideramos “primer plano” seguro.<br>
+            ↳ Valores altos (240–255): retienen más detalles finos (cabello, reflejos) incluso si son oscuros.<br>
+            ↳ Valores bajos (200–239): matizan más agresivo y pueden “afeitar” un poco el borde.
+          </small>
+      
+          <!-- BG Threshold -->
+          <label>BG Threshold: <span id="bgVal">15</span></label>
+          <input type="range" name="bg_thresh" id="bg_thresh" min="0" max="60" value="15">
+          <small class="help-text">
+            Define qué tan estricto es al eliminar el fondo oscuro.<br>
+            ↳ Valores altos (30–60): elimina incluso sombras o zonas oscuras no deseadas.<br>
+            ↳ Valores bajos (0–14): solo quita el negro puro, conserva sombras suaves del sujeto.
+          </small>
+      
+          <!-- Erode Size -->
+          <label>Erode size: <span id="erodeVal">5</span> px</label>
+          <input type="range" name="erode" id="erode" min="0" max="20" value="5">
+          <small class="help-text">
+            Ajusta el ancho de la “zona gris” de transición antes del matting.<br>
+            ↳ Valores altos (8–20): transición más suave, menos halos pero más área de difuminado.<br>
+            ↳ Valores bajos (0–4): recorte más cercano al borde real, pero puede dejar artefactos.
+          </small>
+      
+          <!-- Protect Dilate -->
+          <label>Protect Dilate: <span id="dilateVal">0</span> px</label>
+          <input type="range" name="dilate" id="dilate" min="0" max="20" value="0">
+          <small class="help-text">
+            Expande la máscara de primer plano para “proteger” el sujeto.<br>
+            ↳ Valores altos (5–20): crea un margen seguro, nada se recorta dentro de X píxeles.<br>
+            ↳ Valor 0: sin protección extra, bordes tal cual el matting los defina.
+          </small>
+      
+          <button type="submit" class="user-profile">
+            <div class="user-profile-inner">Quitar Fondo Avanzado</div>
+          </button>
+        </form>
+      
+        <div id="descargaFondoAdv" style="display:none; margin-top:20px;">
+          <p>✅ Imagen procesada</p>
+          <a id="linkFondoAdv" href="#" download>⬇️ Descargar PNG</a>
+        </div>
+        <div class="text-center mt-8">
+          <a href="http://pigmentalab.io:8080/quitarfondoadv.html" target="_blank"
+             class="inline-block bg-gradient-to-r from-purple-600 via-pink-500 to-cyan-500 
+                    text-white font-bold py-3 px-6 rounded-full shadow-lg hover:scale-105 
+                    transition-transform duration-300">
+            📘 Ver cómo usar cada parámetro
+          </a>
+        </div>
+      </div>
+      
+      
+      <script>
+        // Mostrar valor en etiquetas al mover sliders
+        ['fg_thresh','bg_thresh','erode','dilate'].forEach(id => {
+          const inp = document.getElementById(id);
+          const label = document.getElementById(id.replace('_thresh','') + 'Val');
+          inp.addEventListener('input', () => label.innerText = inp.value);
+        });
+      </script>     
+
+<div id="halftone" class="tab-content">
+  <h2 class="text-xl font-bold text-white mb-6">🖤 Semitono</h2>
+  <form id="formHalftone" class="space-y-6">
+
+    <!-- Selector de imagen -->
+    <div class="relative">
+      <input type="file" name="imagen" id="fileInputHalftone" accept=".png,.jpg,.jpeg" required class="sr-only">
+      <button type="button" onclick="document.getElementById('fileInputHalftone').click()" class="user-profile w-full">
+        <div class="user-profile-inner" id="fileLabelHalftone">📁 Seleccionar Imagen</div>
+      </button>
+    </div>
+
+    <!-- Separación entre puntos -->
+    <div class="relative">
+      <input type="number" name="dot_spacing" id="dot_spacing" required value="12" min="1" max="100"
+        class="w-full px-4 py-3 bg-gray-800 border border-purple-500 rounded-lg text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        placeholder="Separación entre puntos">
+      <label for="dot_spacing" class="absolute left-4 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-3 peer-focus:top-[-10px] peer-focus:text-xs peer-focus:text-cyan-300">
+        Separación entre puntos
+      </label>
+    </div>
+
+    <!-- Tamaño máximo del punto -->
+    <div class="relative">
+      <input type="number" name="max_radius" id="max_radius" required value="6" min="1" max="100"
+        class="w-full px-4 py-3 bg-gray-800 border border-purple-500 rounded-lg text-white placeholder-transparent focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        placeholder="Tamaño máximo del punto">
+      <label for="max_radius" class="absolute left-4 top-3 text-gray-400 text-sm transition-all peer-placeholder-shown:top-3 peer-focus:top-[-10px] peer-focus:text-xs peer-focus:text-cyan-300">
+        Tamaño máximo del punto
+      </label>
+    </div>
+
+    <!-- Forma del punto -->
+    <div class="relative">
+      <label for="forma" class="block text-sm text-gray-300 mb-1">Forma del punto</label>
+      <select name="forma" id="forma"
+        class="w-full px-4 py-3 bg-gray-800 border border-purple-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-400">
+        <option value="circulo">🔵 Círculo</option>
+        <option value="cuadrado">⬛ Cuadrado</option>
+        <option value="cruz">➕ Cruz</option>
+        <option value="estrella">✴ Estrella</option>
+        <option value="rombo">◆ Rombo</option>
+        <option value="hexagono">⬡ Hexágono</option>
+        <option value="anillo">⭕ Anillo</option>
+      </select>
+    </div>
+
+    <!-- Botón de procesar -->
+    <button type="submit" class="user-profile w-full">
+      <div class="user-profile-inner">🎨 Crear Semitono</div>
+    </button>
+  </form>
+
+  <div id="descargaHalftone" class="mt-6">
+    <p>✅ Imagen procesada</p>
+    <a id="linkHalftone" href="#" download class="text-cyan-300 underline">⬇️ Descargar Halftone</a>
+  </div>
+</div>
+
+
+      <div id="stochastic" class="tab-content">
+        <h2>🎲 Semitono Avanzado (Stochastic)</h2>
+        <form id="formStochastic" style="display: flex; flex-direction: column; gap: 14px;">
+      
+          <label>
+            📁 <strong>Seleccioná una imagen</strong><br>
+            <input type="file" name="imagen" accept=".png,.jpg,.jpeg" required style="margin-top: 6px;">
+          </label>
+      
+          <label>
+            🟦 <strong>Separación entre puntos</strong><br>
+            <input type="number" name="cell_size" value="12" min="1" max="100">
+            <small style="color:#888">Ej: 8 = puntos más juntos, 20 = puntos más separados</small>
+          </label>
+      
+          <label>
+            ⬤ <strong>Tamaño máximo del punto</strong><br>
+            <input type="number" name="max_radius" value="6" min="1" max="100">
+            <small style="color:#888">Ej: 3 = puntos chicos, 10 = círculos grandes en zonas oscuras</small>
+          </label>
+      
+          <label>
+            🎚️ <strong>Contraste (exponente)</strong><br>
+            <input type="number" name="exponent" value="0.5" step="0.1" min="0.1" max="2">
+            <small style="color:#888">Ej: 0.3 = más contraste visual; 1.5 = distribución más suave</small>
+          </label>
+      
+          <label>
+            📐 <strong>Ángulo de rotación</strong><br>
+            <input type="number" name="angle" value="45" min="0" max="180">
+            <small style="color:#888">Ej: 0° = horizontal, 45° = en diagonal</small>
+          </label>
+      
+          <label>
+            🔆 <strong>Gamma</strong><br>
+            <input type="number" name="gamma" value="2.2" step="0.1" min="0.1" max="5">
+            <small style="color:#888">Ej: 1.0 = imagen más clara, 3.0 = más oscura antes de tramar</small>
+          </label>
+      
+          <label>
+            🌫 <strong>Desenfoque (blur)</strong><br>
+            <input type="number" name="blur" value="0.8" step="0.1" min="0" max="5">
+            <small style="color:#888">Ej: 0.0 = nítido, 2.0 = bordes más suaves</small>
+          </label>
+      
+          <label>
+            🎲 <strong>Variación de posición (jitter)</strong><br>
+            <input type="number" name="jitter_pos" value="0.25" step="0.05" min="0" max="1">
+            <small style="color:#888">Ej: 0.0 = puntos ordenados, 0.5 = puntos más dispersos</small>
+          </label>
+      
+          <label>
+            🎲 <strong>Variación de tamaño</strong><br>
+            <input type="number" name="jitter_size" value="0.15" step="0.05" min="0" max="1">
+            <small style="color:#888">Ej: 0.0 = todos iguales, 0.3 = tamaños irregulares</small>
+          </label>
+      
+          <button type="submit">🎨 Generar semitono disperso</button>
+        </form>
+      
+        <div id="descargaStochastic" style="display:none; margin-top:1em">
+          <p>✅ Semitono disperso generado correctamente</p>
+          <a id="linkStochastic" href="#" download>⬇️ Descargar Imagen</a>
+        </div>
+      
+        <p style="margin-top:2em; text-align:center; font-size:0.9em;">
+          ❓ ¿Querés aprender cómo funciona cada opción?<br>
+          <a href="http://pigmentalab.io:8080/semitonos_adv.html" target="_blank" style="color:#0ff; text-decoration:underline;">
+            Ver explicación detallada del Semitono Avanzado
+          </a>
+        </p>
+      </div>
+      
+      
+
+      <div id="mejorar" class="tab-content">
+        <h2>🎨 Mejorar Colores</h2>
+        <form id="formMejorar">
+          <input type="file" name="imagen" accept=".png,.jpg,.jpeg" required>
+          <label>Tipo de mejora:</label>
+          <select name="modo">
+            <option value="inteligente">🧠 Mejora Inteligente</option>
+            <option value="negra">🖤 Prenda Negra</option>
+            <option value="blanca">🤍 Prenda Blanca</option>
+          </select>
+          <button type="submit" class="user-profile">
+            <div class="user-profile-inner">
+              <!-- Opcional: un icono SVG antes del texto -->
+ 
+              Mejorar
+            </div>
+          </button>
+        </form>
+        <div id="descargaMejorada">
+          <p>✅ Imagen mejorada</p>
+          <a id="linkMejorada" href="#" download>⬇️ Descargar Imagen Mejorada</a>
+        </div>
+      </div>
+
+      <div id="calado" class="tab-content">
+        <h2>🌑 Calado Artístico</h2>
+        <form id="formCalado">
+          <input type="file" name="imagen" accept=".png,.jpg,.jpeg" required>
+          <label>Nivel de umbral:</label>
+          <input type="number" name="threshold" value="60" min="0" max="255">
+          <button type="submit" class="user-profile">
+            <div class="user-profile-inner">
+              <!-- Opcional: un icono SVG antes del texto -->
+ 
+              Aplicar
+            </div>
+          </button>
+        </form>
+        <div id="descargaCalado">
+          <p>✅ Imagen procesada</p>
+          <a id="linkCalado" href="#" download>⬇️ Descargar Imagen Calada</a>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Loader -->
+<div id="loaderOverlay">
+  <div class="loader"></div>
+  <div id="loaderText">Procesando imagen...</div>
+</div>
+
+<script>
+  // Overlay móvil
+  (function(){
+    const esMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+      .test(navigator.userAgent);
+    if (esMovil) {
+      alert("💻 Te Recomendamos usar Pigmenta Lab en computadora. Podés continuar igual 👍 , pero algunas funciones pueden no estar optimizadas al 100%.");
+    }
+  })();
+
+  // UI Helpers
+  function mostrarTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+  }
+  function mostrarLoader(on) {
+    document.getElementById('loaderOverlay').style.display = on ? 'flex' : 'none';
+  }
+
+  // Actualizar etiquetas de sliders en el formulario avanzado
+  ['fg_thresh','bg_thresh','erode','dilate'].forEach(id => {
+    const slider = document.getElementById(id);
+    const label  = document.getElementById(id + 'Val');
+    if (slider && label) {
+      slider.addEventListener('input', () => { label.innerText = slider.value; });
+    }
+  });
+
+  // Control de usos y autenticación mejorado
+
+
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) return;
+
+    // 1) Traer usos al iniciar
+    actualizarUsos();
+
+    // 2) Asociar submit a cada formulario
+    const forms       = ['formAmpliar','formFondo','formFondoAdv','formHalftone','formMejorar','formCalado','formStochastic'];
+    const endpointMap = {
+      formAmpliar:   'procesar.php',
+      formFondo:     'quitarfondo.php',
+      formFondoAdv:  'quitarfondo_advanced.php',
+      formHalftone:  'halftone.php',
+      formMejorar:   'color.php',
+      formCalado:    'calado.php',
+      formStochastic:'halftone_stochastic.php'
+    };
+    const salidaMap = {
+      formAmpliar:   ['descargaAmplia','linkAmplia',''],
+      formFondo:     ['descargaFondo','linkFondo','outputs/'],
+      formFondoAdv:  ['descargaFondoAdv','linkFondoAdv','outputs/'],
+      formHalftone:  ['descargaHalftone','linkHalftone',''],
+      formMejorar:   ['descargaMejorada','linkMejorada',''],
+      formCalado:    ['descargaCalado','linkCalado','/'],
+      formStochastic:['descargaStochastic','linkStochastic','']
+    };
+
+    forms.forEach(id => {
+      const form = document.getElementById(id);
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        if (usosRestantes <= 0) {
+          return alert('❌ Límite diario alcanzado. Intenta mañana.');
+        }
+
+        // Preparar request
+        const fd      = new FormData(form);
+        fd.append('uid',    user.uid);
+        fd.append('email',  user.email);
+        fd.append('nombre', user.displayName || 'Sin Nombre');
+
+        const [contID, linkID, basePath] = salidaMap[id];
+        const endpoint                 = endpointMap[id];
+
+        const btn     = form.querySelector('button');
+        const origTxt = btn.innerText;
+        btn.disabled  = true;
+        btn.innerText = '⏳ Procesando...';
+        mostrarLoader(true);
+
+        try {
+          const res      = await fetch(endpoint, { method: 'POST', body: fd });
+          if (!res.ok) throw new Error(await res.text());
+          const filename = (await res.text()).trim();
+          document.getElementById(contID).style.display = 'block';
+          document.getElementById(linkID).href = basePath + filename;
+
+          // Refrescar usos luego de procesar
+          await actualizarUsos();
+        } catch (err) {
+          alert('❌ ' + err.message);
+        } finally {
+          btn.disabled  = false;
+          btn.innerText = origTxt;
+          mostrarLoader(false);
+        }
+      });
+    });
+  });
+
+  // Recomendación automática para el semitono
+  document.querySelector('#formHalftone input[type="file"]')
+    .addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          const dpi      = 300;
+          const ancho_cm = (img.width / dpi) * 2.54;
+          const alto_cm  = (img.height / dpi) * 2.54;
+          const area     = ancho_cm * alto_cm;
+          let spacing = 12, radius = 4;
+          if (area < 200)      { spacing = 4;  radius = 1; }
+          else if (area < 600) { spacing = 8;  radius = 3; }
+          document.querySelector('[name="dot_spacing"]').value = spacing;
+          document.querySelector('[name="max_radius"]').value  = radius;
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+</script>
+
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    background: #000000;
+    --gap: 5em;
+    --line: 1px;
+    --color: rgba(255, 255, 255, 0.2);
+
+    background-image:
+      linear-gradient(-90deg,
+        transparent calc(var(--gap) - var(--line)),
+        var(--color) calc(var(--gap) - var(--line) + 1px),
+        var(--color) var(--gap)
+      ),
+      linear-gradient(0deg,
+        transparent calc(var(--gap) - var(--line)),
+        var(--color) calc(var(--gap) - var(--line) + 1px),
+        var(--color) var(--gap)
+      );
+    background-size: var(--gap) var(--gap);
+  }
+</style>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/68258135fc91eb190a664bda/1ir981ee9';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
+  <script>
+    // — 1) Variables globales —
+    let usosRestantes = 0;
+    let usosLimite    = 0;
+    
+    // — 2) Pinta el contador en pantalla —
+    function mostrarUsos() {
+      const el = document.getElementById('usosRestantes');
+      el.innerText = `🔄 Usos restantes hoy: ${usosRestantes}/${usosLimite}`;
+    }
+    
+    // — 3) Llama al PHP y actualiza las variables —
+    function actualizarUsos(email) {
+      const fd = new FormData();
+      fd.append('email', email);
+    
+      fetch('consultar_usos.php', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then(d => {
+          if (d.error) throw new Error(d.error);
+          usosRestantes = d.restantes;
+          usosLimite    = d.limite;
+          mostrarUsos();
+        })
+        .catch(err => {
+          console.error('Error al consultar usos:', err);
+          document.getElementById('usosRestantes')
+                  .innerText = '⚠️ Error al consultar usos';
+        });
+    }
+    
+    // — 4) Arranca cuando Firebase Auth esté listo —
+    document.addEventListener('DOMContentLoaded', () => {
+      const out = document.getElementById('usosRestantes');
+    
+      firebase.auth().onAuthStateChanged(user => {
+        if (!user) {
+          out.innerText = '⚠️ Inicia sesión para ver tus usos';
+          return;
+        }
+        // Ya hay usuario → pedimos los usos al backend
+        actualizarUsos(user.email);
+      });
+    });
+    </script>
+    
+    
+    
+</body>
+</html>
